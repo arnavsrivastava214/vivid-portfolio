@@ -56,14 +56,38 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTrigger: { trigger: ".contact", start: "top 80%" },
     })
 
-    // Form submission (you'll need to implement the actual form submission logic)
-    const contactForm = document.getElementById("contact-form")
-    contactForm.addEventListener("submit", (e) => {
-        e.preventDefault()
-        // Implement your form submission logic here
-        alert("Form submitted! (This is a placeholder action)")
-    })
+ 
 })
 
-
+document.addEventListener("DOMContentLoaded", () => {
+    const hamburger = document.querySelector(".hamburger")
+    const navLinks = document.querySelector(".nav-links")
+    const navItems = document.querySelectorAll(".nav-links li a")
+    const breadcrumb = document.querySelector(".breadcrumb span")
+  
+    hamburger.addEventListener("click", () => {
+      navLinks.classList.toggle("active")
+      hamburger.classList.toggle("active")
+    })
+  
+    navItems.forEach((item) => {
+      item.addEventListener("click", (e) => {
+        breadcrumb.textContent = item.textContent
+        navLinks.classList.remove("active")
+        hamburger.classList.remove("active")
+      })
+    })
+  
+  
+  
+    // Close mobile menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove("active")
+        hamburger.classList.remove("active")
+      }
+    })
+  })
+  
+  
 
