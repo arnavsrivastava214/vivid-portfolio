@@ -97,6 +97,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const phAverageRatingElement = document.getElementById("phAverageRating")
   
     let phCurrentRating = 0
+    let phReviews = []
+  
+    // Simulated initial reviews
+    const phInitialReviews = [
+      {
+        id: 1,
+        rating: 5,
+        text: "Amazing photographer! Captured our wedding beautifully.",
+        name: "Emily",
+        date: "2023-05-15T10:30:00Z",
+      },
+      {
+        id: 2,
+        rating: 4,
+        text: "Great work on our family portraits. Very professional.",
+        name: "Michael",
+        date: "2023-06-02T14:45:00Z",
+      },
+      {
+        id: 3,
+        rating: 5,
+        text: "Incredible landscape shots. Truly talented!",
+        name: "Sarah",
+        date: "2023-06-10T09:15:00Z",
+      },
+    ]
   
     phOpenModalBtn.onclick = () => (phModal.style.display = "block")
     phCloseBtn.onclick = () => (phModal.style.display = "none")
@@ -139,15 +165,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const phReviewerName = document.getElementById("phReviewerName").value
       if (phCurrentRating > 0 && phReviewText.trim() !== "") {
         const phReview = {
+          id: Date.now(),
           rating: phCurrentRating,
           text: phReviewText,
           name: phReviewerName || "Anonymous",
           date: new Date().toISOString(),
-          id: Date.now(), // Unique identifier for each review
         }
-        phSaveReview(phReview)
-        phDisplayReview(phReview)
-        phUpdateAverageRating()
+        phSimulateReviewSubmission(phReview)
         phResetModal()
         phModal.style.display = "none"
       } else {
@@ -155,10 +179,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   
-    function phSaveReview(review) {
-      const phReviews = JSON.parse(localStorage.getItem("phReviews")) || []
-      phReviews.push(review)
-      localStorage.setItem("phReviews", JSON.stringify(phReviews))
+    function phSimulateReviewSubmission(review) {
+      setTimeout(() => {
+        phReviews.unshift(review)
+        phDisplayReview(review)
+        phUpdateAverageRating()
+      }, 500)
     }
   
     function phDisplayReview(review) {
@@ -182,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
     function phUpdateAverageRating() {
-      const phReviews = JSON.parse(localStorage.getItem("phReviews")) || []
       if (phReviews.length === 0) {
         phAverageRatingElement.style.display = "none"
         return
@@ -200,23 +225,34 @@ document.addEventListener("DOMContentLoaded", () => {
         `(${phReviews.length} review${phReviews.length !== 1 ? "s" : ""})`
     }
   
-    function phLoadReviews() {
-      const phReviews = JSON.parse(localStorage.getItem("phReviews")) || []
-      phReviews.sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, newest first
-      phReviewsContainer.innerHTML = "" // Clear existing reviews
-      phReviews.forEach((review) => phDisplayReview(review))
-      phUpdateAverageRating()
+    function phLoadInitialReviews() {
+      setTimeout(() => {
+        phReviews = [...phInitialReviews]
+        phReviews.forEach((review) => phDisplayReview(review))
+        phUpdateAverageRating()
+      }, 1000)
     }
   
-    phLoadReviews()
+    function phSimulateFetchNewReviews() {
+      setInterval(() => {
+        if (Math.random() < 0.3) {
+          const newReview = {
+            id: Date.now(),
+            rating: Math.floor(Math.random() * 5) + 1,
+            text: "This is a simulated review from another user.",
+            name: "Simulated User",
+            date: new Date().toISOString(),
+          }
+          phReviews.unshift(newReview)
+          phDisplayReview(newReview)
+          phUpdateAverageRating()
+        }
+      }, 30000)
+    }
   
-    setInterval(phLoadReviews, 30000)
-  
-    window.addEventListener("storage", (event) => {
-      if (event.key === "phReviews") {
-        phLoadReviews()
-      }
-    })
+    phLoadInitialReviews()
+    phSimulateFetchNewReviews()
   })
+  
   
 
