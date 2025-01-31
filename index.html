@@ -13,12 +13,10 @@
         href="https://fonts.googleapis.com/css2?family=Carter+One&family=Hubballi&family=Montserrat:wght@300&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
 </head>
-
 <body>
     <div class="loader">
         <div class="loader-text">Loading</div>
     </div>
-
     <header>
         <nav>
             <div class="logo">Vivid Snap</div>
@@ -45,9 +43,6 @@
         </nav>
 
     </header>
-
-
-
     <main>
         <section id="home" class="hero">
             <div class="hero-content">
@@ -55,39 +50,57 @@
                 <p class="hero-subtitle">Capturing moments, creating memories</p>
             </div>
         </section>
-        <h3 style="text-align: center;">VividCarousel</h3>
-        <div class="carousel-container">
-            <div class="main-image-container">
-                <img src="https://media.istockphoto.com/id/520839324/photo/wild-elephant.jpg?s=612x612&w=0&k=20&c=jnDbuC5oqdaH_OCVsBGa19A5sCx7EVKj94DdVA6Xe0g="
-                    alt="Main Image" class="main-image">
-            </div>
-            <div class="thumbnails-container">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGoGkyfCJBw2iYBxFJtx0jlUEYiOGpF_iLmiz8z1CC2PRIg8oKZeRIPp9HCpuPrqJ9iX0&usqp=CAU"
-                    alt="Thumbnail 1" class="thumbnail active">
-                <img src="https://media.istockphoto.com/id/520839324/photo/wild-elephant.jpg?s=612x612&w=0&k=20&c=jnDbuC5oqdaH_OCVsBGa19A5sCx7EVKj94DdVA6Xe0g="
-                    alt="Thumbnail 2" class="thumbnail">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCY84dxM3E7_SIQyuyuvWNeN35t8gRH0TvUg&s" alt="Thumbnail 3" class="thumbnail">
-                <img src="https://cdn.pixabay.com/photo/2023/04/05/21/09/bird-7902319_1280.jpg" alt="Thumbnail 4" class="thumbnail">
-                <img src="https://www.shutterstock.com/image-photo/male-siberian-tiger-panthera-tigris-600nw-2502487197.jpg" alt="Thumbnail 5" class="thumbnail">
-            </div>
-            <button class="nav-button prev-button">&lt;</button>
-            <button class="nav-button next-button">&gt;</button>
-        </div>
 
+        <div class="ph_portfolio_wrapper">
+            <h1 class="ph_portfolio_title"> Achyut Photography</h1>
+            <div class="ph_image_showcase">
+                <img src="IMG_0287.JPG" alt="Photo 1" class="ph_portfolio_img">
+                <img src="IMG_1664.JPEG" alt="Photo 2" class="ph_portfolio_img">
+                <img src="IMG_1669.JPG" alt="Photo 3" class="ph_portfolio_img">
+            </div>
+            <div class="ph_review_section">
+                <h2 class="ph_review_title">Feedback For Yashashva.</h2>
+                <div id="phAverageRating" class="ph_avg_rating">
+                    <div class="ph_avg_stars"></div>
+                    <div class="ph_avg_value"></div>
+                    <div class="ph_total_reviews"></div>
+                </div>
+                <button id="phOpenReviewModal" class="ph_review_btn">Share Your Experience</button>
+                <div id="phReviewsContainer" class="ph_reviews_list">
+                    <!-- Reviews will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        <div id="phReviewModal" class="ph_modal">
+            <div class="ph_modal_content">
+                <span class="ph_modal_close">&times;</span>
+                <h2 class="ph_modal_title">Rate Your Experience</h2>
+                <div class="ph_star_rating" id="phStarRating">
+                    <span class="ph_star" data-rating="1">&#9733;</span>
+                    <span class="ph_star" data-rating="2">&#9733;</span>
+                    <span class="ph_star" data-rating="3">&#9733;</span>
+                    <span class="ph_star" data-rating="4">&#9733;</span>
+                    <span class="ph_star" data-rating="5">&#9733;</span>
+                </div>
+                <textarea id="phReviewText" class="ph_review_textarea" placeholder="Describe your experience..."></textarea>
+                <input type="text" id="phReviewerName" class="ph_reviewer_name" placeholder="Your Name (optional)">
+                <button id="phSubmitReview" class="ph_submit_btn">Submit Feedback</button>
+            </div>
+        </div>
         <section id="gallery" class="gallery">
             <h2>Gallery</h2>
             <div class="gallery-grid">
                 <div class="gallery-item"><img
-                        src="https://media.istockphoto.com/id/485371557/photo/twilight-at-spirit-island.jpg?s=612x612&w=0&k=20&c=FSGliJ4EKFP70Yjpzso0HfRR4WwflC6GKfl4F3Hj7fk="
+                        src="IMG_1671.JPG"
                         alt="Landscape photo" loading="lazy"></div>
                 <div class="gallery-item"><img
-                        src="https://images.squarespace-cdn.com/content/v1/52540926e4b0d49865bee20d/1473520260750-LO9DJ4REDZYHU25BDX25/London+portrait+photographer"
+                        src="IMG_1674.JPG"
                         alt="Portrait photo" loading="lazy"></div>
                 <div class="gallery-item"><img
-                        src="https://thumbs.dreamstime.com/b/tiger-splash-river-water-action-wildlife-scene-wild-cat-nature-habitat-tiger-running-water-danger-animal-taj-97615888.jpg"
+                        src="IMG_1673.JPG"
                         alt="Wildlife photo" loading="lazy"></div>
                 <div class="gallery-item"><img
-                        src="https://images.unsplash.com/photo-1620259570543-31964aa22586?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3RyZWV0JTIwcGhvdG9ncmFwaHl8ZW58MHx8MHx8fDA%3D"
+                        src="IMG_8007.JPG"
                         alt="Street photo" loading="lazy"></div>
                 <div class="gallery-item"><img
                         src="https://www.arch2o.com/wp-content/uploads/2022/10/Arch2O-10-of-the-most-eye-opening-iconic-buildings-of-modern-architecture.jpg"

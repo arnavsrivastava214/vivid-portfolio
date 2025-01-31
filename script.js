@@ -86,120 +86,125 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   })
-
+  
   document.addEventListener("DOMContentLoaded", () => {
-    const mainImage = document.querySelector(".main-image")
-    const thumbnails = document.querySelectorAll(".thumbnail")
-    const prevButton = document.querySelector(".prev-button")
-    const nextButton = document.querySelector(".next-button")
+    const phModal = document.getElementById("phReviewModal")
+    const phOpenModalBtn = document.getElementById("phOpenReviewModal")
+    const phCloseBtn = document.querySelector(".ph_modal_close")
+    const phStars = document.querySelectorAll(".ph_star")
+    const phSubmitReviewBtn = document.getElementById("phSubmitReview")
+    const phReviewsContainer = document.getElementById("phReviewsContainer")
+    const phAverageRatingElement = document.getElementById("phAverageRating")
   
-    let currentIndex = 0
-    let intervalId
-    let isPaused = false
+    let phCurrentRating = 0
   
-    function updateMainImage(index) {
-      mainImage.classList.add("fade-out")
-      setTimeout(() => {
-        mainImage.src = thumbnails[index].src
-        mainImage.classList.remove("fade-out")
-      }, 500)
+    phOpenModalBtn.onclick = () => (phModal.style.display = "block")
+    phCloseBtn.onclick = () => (phModal.style.display = "none")
   
-      thumbnails.forEach((thumb, i) => {
-        thumb.classList.toggle("active", i === index)
+    window.onclick = (event) => {
+      if (event.target == phModal) {
+        phModal.style.display = "none"
+      }
+    }
+  
+    phStars.forEach((star) => {
+      star.addEventListener("mouseover", () => {
+        const rating = Number.parseInt(star.getAttribute("data-rating"))
+        phHighlightStars(rating)
       })
-    }
   
-    function showNext() {
-      currentIndex = (currentIndex + 1) % thumbnails.length
-      updateMainImage(currentIndex)
-    }
+      star.addEventListener("mouseout", () => {
+        phHighlightStars(phCurrentRating)
+      })
   
-    function showPrev() {
-      currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length
-      updateMainImage(currentIndex)
-    }
+      star.addEventListener("click", () => {
+        phCurrentRating = Number.parseInt(star.getAttribute("data-rating"))
+        phHighlightStars(phCurrentRating)
+      })
+    })
   
-    function startAutoSlide() {
-      intervalId = setInterval(() => {
-        if (!isPaused) {
-          showNext()
+    function phHighlightStars(rating) {
+      phStars.forEach((star) => {
+        const starRating = Number.parseInt(star.getAttribute("data-rating"))
+        if (starRating <= rating) {
+          star.classList.add("active")
+        } else {
+          star.classList.remove("active")
         }
-      }, 2000)
-    }
-  
-    function stopAutoSlide() {
-      clearInterval(intervalId)
-    }
-  
-    function pauseAutoSlide() {
-      isPaused = true
-      setTimeout(() => {
-        isPaused = false
-      }, 5000) // Resume auto-slide after 5 seconds of inactivity
-    }
-  
-    thumbnails.forEach((thumbnail, index) => {
-      thumbnail.addEventListener("click", () => {
-        currentIndex = index
-        updateMainImage(currentIndex)
-        pauseAutoSlide()
       })
-    })
-  
-    prevButton.addEventListener("click", () => {
-      showPrev()
-      pauseAutoSlide()
-    })
-  
-    nextButton.addEventListener("click", () => {
-      showNext()
-      pauseAutoSlide()
-    })
-  
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft") {
-        showPrev()
-        pauseAutoSlide()
-      }
-      if (e.key === "ArrowRight") {
-        showNext()
-        pauseAutoSlide()
-      }
-    })
-  
-    let touchStartX = 0
-    let touchEndX = 0
-  
-    mainImage.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX
-    })
-  
-    mainImage.addEventListener("touchend", (e) => {
-      touchEndX = e.changedTouches[0].screenX
-      handleSwipe()
-    })
-  
-    function handleSwipe() {
-      if (touchEndX < touchStartX) {
-        showNext()
-        pauseAutoSlide()
-      }
-      if (touchEndX > touchStartX) {
-        showPrev()
-        pauseAutoSlide()
-      }
     }
   
-    startAutoSlide()
-  
-    document.querySelector(".carousel-container").addEventListener("mouseenter", () => {
-      isPaused = true
+    phSubmitReviewBtn.addEventListener("click", () => {
+      const phReviewText = document.getElementById("phReviewText").value
+      const phReviewerName = document.getElementById("phReviewerName").value
+      if (phCurrentRating > 0 && phReviewText.trim() !== "") {
+        const phReview = {
+          rating: phCurrentRating,
+          text: phReviewText,
+          name: phReviewerName || "Anonymous",
+          date: new Date().toISOString(),
+        }
+        phSaveReview(phReview)
+        phDisplayReview(phReview)
+        phUpdateAverageRating()
+        phResetModal()
+        phModal.style.display = "none"
+      } else {
+        alert("Please provide both a rating and a review.")
+      }
     })
   
-    document.querySelector(".carousel-container").addEventListener("mouseleave", () => {
-      isPaused = false
-    })
+    function phSaveReview(review) {
+      const phReviews = JSON.parse(localStorage.getItem("phReviews")) || []
+      phReviews.push(review)
+      localStorage.setItem("phReviews", JSON.stringify(phReviews))
+    }
+  
+    function phDisplayReview(review) {
+      const phReviewElement = document.createElement("div")
+      phReviewElement.classList.add("ph_review_item")
+      phReviewElement.innerHTML = `
+              <div class="ph_review_stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div>
+              <div class="ph_review_text">${review.text}</div>
+              <div class="ph_review_author">- ${review.name}</div>
+              <div class="ph_review_date">${new Date(review.date).toLocaleDateString()}</div>
+          `
+      phReviewsContainer.insertBefore(phReviewElement, phReviewsContainer.firstChild)
+    }
+  
+    function phResetModal() {
+      phCurrentRating = 0
+      phHighlightStars(0)
+      document.getElementById("phReviewText").value = ""
+      document.getElementById("phReviewerName").value = ""
+    }
+  
+    function phUpdateAverageRating() {
+      const phReviews = JSON.parse(localStorage.getItem("phReviews")) || []
+      if (phReviews.length === 0) {
+        phAverageRatingElement.style.display = "none"
+        return
+      }
+  
+      const phTotalRating = phReviews.reduce((sum, review) => sum + review.rating, 0)
+      const phAverageRating = phTotalRating / phReviews.length
+      const phRoundedRating = Math.round(phAverageRating * 10) / 10
+  
+      phAverageRatingElement.style.display = "block"
+      phAverageRatingElement.querySelector(".ph_avg_stars").innerHTML =
+        "★".repeat(Math.round(phAverageRating)) + "☆".repeat(5 - Math.round(phAverageRating))
+      phAverageRatingElement.querySelector(".ph_avg_value").textContent = phRoundedRating.toFixed(1)
+      phAverageRatingElement.querySelector(".ph_total_reviews").textContent =
+        `(${phReviews.length} review${phReviews.length !== 1 ? "s" : ""})`
+    }
+  
+    function phLoadReviews() {
+      const phReviews = JSON.parse(localStorage.getItem("phReviews")) || []
+      phReviews.sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, newest first
+      phReviews.forEach((review) => phDisplayReview(review))
+      phUpdateAverageRating()
+    }
+  
+    phLoadReviews()
   })
-  
-  
 
