@@ -143,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
           text: phReviewText,
           name: phReviewerName || "Anonymous",
           date: new Date().toISOString(),
+          id: Date.now(), // Unique identifier for each review
         }
         phSaveReview(phReview)
         phDisplayReview(phReview)
@@ -163,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function phDisplayReview(review) {
       const phReviewElement = document.createElement("div")
       phReviewElement.classList.add("ph_review_item")
+      phReviewElement.dataset.id = review.id
       phReviewElement.innerHTML = `
               <div class="ph_review_stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div>
               <div class="ph_review_text">${review.text}</div>
@@ -201,10 +203,20 @@ document.addEventListener("DOMContentLoaded", () => {
     function phLoadReviews() {
       const phReviews = JSON.parse(localStorage.getItem("phReviews")) || []
       phReviews.sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, newest first
+      phReviewsContainer.innerHTML = "" // Clear existing reviews
       phReviews.forEach((review) => phDisplayReview(review))
       phUpdateAverageRating()
     }
   
     phLoadReviews()
+  
+    setInterval(phLoadReviews, 30000)
+  
+    window.addEventListener("storage", (event) => {
+      if (event.key === "phReviews") {
+        phLoadReviews()
+      }
+    })
   })
+  
 
