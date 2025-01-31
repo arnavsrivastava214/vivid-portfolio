@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.style.display = "none"
     })
 
-    // GSAP Animations
     gsap.from(".hero-content", { opacity: 0, y: 50, duration: 1, delay: 0.5 })
     gsap.from(".gallery-item", {
         opacity: 0,
@@ -80,12 +79,125 @@ document.addEventListener("DOMContentLoaded", () => {
   
   
   
-    // Close mobile menu when clicking outside
     document.addEventListener("click", (e) => {
       if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
         navLinks.classList.remove("active")
         hamburger.classList.remove("active")
       }
+    })
+  })
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const mainImage = document.querySelector(".main-image")
+    const thumbnails = document.querySelectorAll(".thumbnail")
+    const prevButton = document.querySelector(".prev-button")
+    const nextButton = document.querySelector(".next-button")
+  
+    let currentIndex = 0
+    let intervalId
+    let isPaused = false
+  
+    function updateMainImage(index) {
+      mainImage.classList.add("fade-out")
+      setTimeout(() => {
+        mainImage.src = thumbnails[index].src
+        mainImage.classList.remove("fade-out")
+      }, 500)
+  
+      thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle("active", i === index)
+      })
+    }
+  
+    function showNext() {
+      currentIndex = (currentIndex + 1) % thumbnails.length
+      updateMainImage(currentIndex)
+    }
+  
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length
+      updateMainImage(currentIndex)
+    }
+  
+    function startAutoSlide() {
+      intervalId = setInterval(() => {
+        if (!isPaused) {
+          showNext()
+        }
+      }, 2000)
+    }
+  
+    function stopAutoSlide() {
+      clearInterval(intervalId)
+    }
+  
+    function pauseAutoSlide() {
+      isPaused = true
+      setTimeout(() => {
+        isPaused = false
+      }, 5000) // Resume auto-slide after 5 seconds of inactivity
+    }
+  
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener("click", () => {
+        currentIndex = index
+        updateMainImage(currentIndex)
+        pauseAutoSlide()
+      })
+    })
+  
+    prevButton.addEventListener("click", () => {
+      showPrev()
+      pauseAutoSlide()
+    })
+  
+    nextButton.addEventListener("click", () => {
+      showNext()
+      pauseAutoSlide()
+    })
+  
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        showPrev()
+        pauseAutoSlide()
+      }
+      if (e.key === "ArrowRight") {
+        showNext()
+        pauseAutoSlide()
+      }
+    })
+  
+    let touchStartX = 0
+    let touchEndX = 0
+  
+    mainImage.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX
+    })
+  
+    mainImage.addEventListener("touchend", (e) => {
+      touchEndX = e.changedTouches[0].screenX
+      handleSwipe()
+    })
+  
+    function handleSwipe() {
+      if (touchEndX < touchStartX) {
+        showNext()
+        pauseAutoSlide()
+      }
+      if (touchEndX > touchStartX) {
+        showPrev()
+        pauseAutoSlide()
+      }
+    }
+  
+    startAutoSlide()
+  
+    document.querySelector(".carousel-container").addEventListener("mouseenter", () => {
+      isPaused = true
+    })
+  
+    document.querySelector(".carousel-container").addEventListener("mouseleave", () => {
+      isPaused = false
     })
   })
   
